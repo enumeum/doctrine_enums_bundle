@@ -36,7 +36,7 @@ doctrine_enum:
       namespace: App\EnumFolder\Two
 ```
 
-For multiple **named** connections config also supports them. Connections naming should be similar to your Doctrine config.
+For multiple **named** connections config also supports them. Connections naming should be similar to Doctrine.
 ```yaml
 doctrine_enum:
   connections:
