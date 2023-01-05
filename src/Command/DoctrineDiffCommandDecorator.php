@@ -23,7 +23,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 final class DoctrineDiffCommandDecorator extends Command
 {
     /** @var string|null */
-    protected static $defaultName = 'doctrine:migrations:diff:decorator';
+    protected static $defaultName = 'doctrine:migrations:diff';
 
     public function __construct(
         private readonly DiffCommand $decorated,
@@ -36,6 +36,7 @@ final class DoctrineDiffCommandDecorator extends Command
 
     protected function configure(): void
     {
+        $this->setDescription($this->decorated->getDescription());
         $this->setDefinition($this->decorated->getDefinition());
     }
 
