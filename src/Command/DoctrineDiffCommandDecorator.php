@@ -36,6 +36,8 @@ final class DoctrineDiffCommandDecorator extends Command
 
     protected function configure(): void
     {
+        $this->setApplication($this->decorated->getApplication());
+        $this->setAliases($this->decorated->getAliases());
         $this->setDescription($this->decorated->getDescription());
         $this->setDefinition($this->decorated->getDefinition());
     }
