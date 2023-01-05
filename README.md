@@ -127,3 +127,11 @@ class Entity
     }
 }
 ```
+
+### Usage
+Diff command will create migration file using Doctrine Migrations bundle config.
+
+    ./bin/console enumeum:migrations:diff
+
+Note that Doctrine's **doctrine:migrations:diff** command is overwritten and decorated to support types loading.
+It has no any side effects, but you should be informed about that. 
