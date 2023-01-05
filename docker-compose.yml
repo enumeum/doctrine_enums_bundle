@@ -1,0 +1,18 @@
+services:
+  php:
+    container_name: enum_bundle_php
+    build: .docker/php
+    volumes:
+      - .:/var/www
+    tty: true
+    stdin_open: true
+
+  pgsql:
+    container_name: enum_bundle_pgsql
+    image: postgres:13
+    ports:
+      - 12001:5432
+    environment:
+      POSTGRES_DB: enum_testing
+      POSTGRES_USER: enum_user
+      POSTGRES_PASSWORD: enum_password
