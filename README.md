@@ -103,9 +103,9 @@ class Entity
     private int $id;
 
     /**
-     * @ORM\Column(type="string", enumType=StatusType::class, options={"comment":"SOME Comment"})
+     * @ORM\Column(type="string", enumType=StatusType::class, options={"comment":"Comment"})
      */
-    #[ORM\Column(type: Types::STRING, enumType: StatusType::class, options: ['comment' => 'SOME Comment'])]
+    #[ORM\Column(type: Types::STRING, enumType: StatusType::class, options: ['comment' => 'Comment'])]
     private StatusType $status;
 
     public function __construct(
