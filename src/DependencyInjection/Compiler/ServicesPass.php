@@ -101,7 +101,7 @@ class ServicesPass implements CompilerPassInterface
                 $container->setAlias(SchemaManager::class, sprintf('enumeum.%s_schema_manager', $name));
             }
 
-            $enumTool = $container->setDefinition(
+            $container->setDefinition(
                 sprintf('enumeum.%s_enum_tool', $name),
                 new Definition(EnumTool::class, [$schemaManager, $connection])
             );
@@ -136,6 +136,7 @@ class ServicesPass implements CompilerPassInterface
             'enumeum.doctrine_diff_command_decorator',
             new Definition(DoctrineDiffCommandDecorator::class, [
                     new Reference('enumeum.doctrine_diff_command_decorator.inner'),
+                    new Reference('enumeum.migrations.diff_command'),
                     $definitionRegistryCollection,
                     $doctrineDependencyFactory,
                     'doctrine:migrations:diff',

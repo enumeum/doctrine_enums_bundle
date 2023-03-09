@@ -15,9 +15,11 @@ use Doctrine\Migrations\DependencyFactory;
 use Doctrine\Migrations\Tools\Console\Command\DiffCommand;
 use Doctrine\Migrations\Tools\Console\Exception\InvalidOptionUsage;
 use Enumeum\DoctrineEnum\Type\TypeRegistryLoader;
+use Enumeum\DoctrineEnumBundle\Command\DiffCommand as EnumeumDiffCommand;
 use Enumeum\DoctrineEnumBundle\DefinitionRegistryCollection;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 final class DoctrineDiffCommandDecorator extends Command
@@ -27,6 +29,7 @@ final class DoctrineDiffCommandDecorator extends Command
 
     public function __construct(
         private readonly DiffCommand $decorated,
+        private readonly EnumeumDiffCommand $enumeumDiff,
         private readonly DefinitionRegistryCollection $definitionRegistryCollection,
         private readonly ?DependencyFactory $dependencyFactory = null,
         ?string $name = null,
@@ -40,6 +43,13 @@ final class DoctrineDiffCommandDecorator extends Command
         $this->setAliases($this->decorated->getAliases());
         $this->setDescription($this->decorated->getDescription());
         $this->setDefinition($this->decorated->getDefinition());
+
+        $this->addOption(
+            'with-enums',
+            'E',
+            InputOption::VALUE_NONE,
+            'Run Enumeum diff command before the general one to create a migration with enums.',
+        );
     }
 
     /**
@@ -49,6 +59,11 @@ final class DoctrineDiffCommandDecorator extends Command
         InputInterface $input,
         OutputInterface $output
     ): int {
+        if ($input->hasOption('with-enums') && $input->getOption('with-enums')) {
+            $this->enumeumDiff->initialize($input, $output);
+            $this->enumeumDiff->execute($input, $output);
+        }
+
         $registry = $this->definitionRegistryCollection->getRegistry(
             $this->dependencyFactory->getConfiguration()->getConnectionName() ?? 'default',
         );
