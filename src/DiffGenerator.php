@@ -35,14 +35,15 @@ class DiffGenerator
         bool $formatted = false,
         int $lineLength = 120,
         bool $checkDbPlatform = true,
-        bool $fromEmptySchema = false
+        bool $fromEmptySchema = false,
+        bool $ignoreUnknownTypes = false,
     ): string {
         $fromSchema = $fromEmptySchema ? $this->createEmptySchema() : $this->createFromSchema();
         $toSchema = $this->createToSchema();
 
         $comparator = Comparator::create();
 
-        $upSql = $comparator->compareSchemas($fromSchema, $toSchema)->toSql();
+        $upSql = $comparator->compareSchemas($fromSchema, $toSchema)->toSql(withoutDropping: $ignoreUnknownTypes);
         $up = $this->migrationSqlGenerator->generate(
             $upSql,
             $formatted,
@@ -50,7 +51,7 @@ class DiffGenerator
             $checkDbPlatform
         );
 
-        $downSql = $comparator->compareSchemas($toSchema, $fromSchema)->toSql();
+        $downSql = $comparator->compareSchemas($toSchema, $fromSchema)->toSql(withoutCreating: $ignoreUnknownTypes);
         $down = $this->migrationSqlGenerator->generate(
             $downSql,
             $formatted,

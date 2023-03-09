@@ -104,6 +104,12 @@ EOT
                 null,
                 InputOption::VALUE_NONE,
                 'Generate a full migration as if the current database was empty.'
+            )
+            ->addOption(
+                'ignore-unknown',
+                'U',
+                InputOption::VALUE_NONE,
+                'Do not syncDatabase types which do not defined in application.',
             );
     }
 
@@ -161,7 +167,8 @@ EOT
                 $formatted,
                 $lineLength,
                 $checkDbPlatform,
-                $fromEmptySchema
+                $fromEmptySchema,
+                $input->hasOption('ignore-unknown') && $input->getOption('ignore-unknown'),
             );
         } catch (NoChangesDetected $exception) {
             if ($allowEmptyDiff) {

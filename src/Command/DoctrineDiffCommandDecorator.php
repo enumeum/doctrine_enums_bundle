@@ -44,12 +44,20 @@ final class DoctrineDiffCommandDecorator extends Command
         $this->setDescription($this->decorated->getDescription());
         $this->setDefinition($this->decorated->getDefinition());
 
-        $this->addOption(
-            'with-enums',
-            'E',
-            InputOption::VALUE_NONE,
-            'Run Enumeum diff command before the general one to create a migration with enums.',
-        );
+        $this
+            ->addOption(
+                'with-enums',
+                'E',
+                InputOption::VALUE_NONE,
+                'Run Enumeum diff command before the general one to create a migration with enums.',
+            )
+            ->addOption(
+                'ignore-unknown',
+                'U',
+                InputOption::VALUE_NONE,
+                'Do not syncDatabase types which do not defined in application.',
+            )
+        ;
     }
 
     /**
