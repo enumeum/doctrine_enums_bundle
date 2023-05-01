@@ -12,7 +12,6 @@ declare(strict_types=1);
 namespace Enumeum\DoctrineEnumBundle\Command;
 
 use Doctrine\Migrations\DependencyFactory;
-use Doctrine\Migrations\Generator\Exception\NoChangesDetected;
 use Doctrine\Migrations\Metadata\AvailableMigrationsList;
 use Doctrine\Migrations\Metadata\ExecutedMigrationsList;
 use Doctrine\Migrations\Tools\Console\Command\DoctrineCommand;
@@ -21,11 +20,11 @@ use Doctrine\SqlFormatter\SqlFormatter;
 use Enumeum\DoctrineEnum\Schema\SchemaManager;
 use Enumeum\DoctrineEnumBundle\DefinitionRegistryCollection;
 use Enumeum\DoctrineEnumBundle\DiffGenerator;
+use Enumeum\DoctrineEnumBundle\Exception\NoChangesDetected;
 use OutOfBoundsException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-
 use function addslashes;
 use function assert;
 use function class_exists;
@@ -34,7 +33,6 @@ use function filter_var;
 use function is_string;
 use function key;
 use function sprintf;
-
 use const FILTER_VALIDATE_BOOLEAN;
 
 /**
@@ -49,9 +47,8 @@ final class DiffCommand extends DoctrineCommand
     public function __construct(
         private readonly DefinitionRegistryCollection $definitionRegistryCollection,
         ?DependencyFactory $dependencyFactory = null,
-        ?string $name = null
     ) {
-        parent::__construct($dependencyFactory, $name);
+        parent::__construct($dependencyFactory);
     }
 
     protected function configure(): void
@@ -106,20 +103,18 @@ EOT
                 'Generate a full migration as if the current database was empty.'
             )
             ->addOption(
-                'ignore-unknown',
+                'ignore-unknown-enums',
                 'U',
                 InputOption::VALUE_NONE,
-                'Do not syncDatabase types which do not defined in application.',
+                'Do not sync database enum types which do not defined in application.',
             );
     }
 
     /**
      * @throws InvalidOptionUsage
      */
-    protected function execute(
-        InputInterface $input,
-        OutputInterface $output
-    ): int {
+    protected function execute(InputInterface $input, OutputInterface $output): int
+    {
         $formatted = filter_var($input->getOption('formatted'), FILTER_VALIDATE_BOOLEAN);
         $lineLength = (int) $input->getOption('line-length');
         $allowEmptyDiff = $input->getOption('allow-empty-diff');
@@ -168,7 +163,7 @@ EOT
                 $lineLength,
                 $checkDbPlatform,
                 $fromEmptySchema,
-                $input->hasOption('ignore-unknown') && $input->getOption('ignore-unknown'),
+                $input->hasOption('ignore-unknown-enums') && $input->getOption('ignore-unknown-enums'),
             );
         } catch (NoChangesDetected $exception) {
             if ($allowEmptyDiff) {

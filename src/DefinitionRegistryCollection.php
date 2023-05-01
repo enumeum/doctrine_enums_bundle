@@ -17,7 +17,7 @@ use Enumeum\DoctrineEnum\Definition\DefinitionRegistryLoader;
 class DefinitionRegistryCollection
 {
     public function __construct(
-        /** @var iterable<DefinitionRegistryLoader> $loaders */
+        /** @var array<string, DefinitionRegistryLoader> $loaders */
         private iterable $loaders = [],
     ) {
     }

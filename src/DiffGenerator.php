@@ -11,12 +11,12 @@ declare(strict_types=1);
 
 namespace Enumeum\DoctrineEnumBundle;
 
-use Doctrine\Migrations\Generator\Exception\NoChangesDetected;
 use Doctrine\Migrations\Generator\Generator;
 use Doctrine\Migrations\Generator\SqlGenerator;
 use Enumeum\DoctrineEnum\Schema\Comparator;
 use Enumeum\DoctrineEnum\Schema\Schema;
 use Enumeum\DoctrineEnum\Schema\SchemaManager;
+use Enumeum\DoctrineEnumBundle\Exception\NoChangesDetected;
 
 class DiffGenerator
 {

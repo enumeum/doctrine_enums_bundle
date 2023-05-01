@@ -11,27 +11,25 @@ declare(strict_types=1);
 
 namespace Enumeum\DoctrineEnumBundle\Command;
 
-use Doctrine\Migrations\DependencyFactory;
-use Doctrine\Migrations\Tools\Console\Command\DiffCommand as DoctrineDiffCommand;
+use Doctrine\ORM\Tools\Console\Command\ValidateSchemaCommand as DoctrineValidateSchemaCommand;
 use Enumeum\DoctrineEnum\Type\TypeRegistryLoader;
 use Enumeum\DoctrineEnumBundle\ArrayInputResolver;
-use Enumeum\DoctrineEnumBundle\Command\DiffCommand as EnumeumDiffCommand;
+use Enumeum\DoctrineEnumBundle\Command\ValidateSchemaCommand as EnumeumValidateSchemaCommand;
 use Enumeum\DoctrineEnumBundle\DefinitionRegistryCollection;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-final class DoctrineDiffCommandDecorator extends Command
+final class DoctrineValidateSchemaCommandDecorator extends Command
 {
     /** @var string|null */
-    protected static $defaultName = 'doctrine:migrations:diff';
+    protected static $defaultName = 'doctrine:schema:validate';
 
     public function __construct(
-        private readonly DoctrineDiffCommand $doctrineCommand,
-        private readonly EnumeumDiffCommand $enumeumCommand,
+        private readonly DoctrineValidateSchemaCommand $doctrineCommand,
+        private readonly EnumeumValidateSchemaCommand $enumeumCommand,
         private readonly DefinitionRegistryCollection $definitionRegistryCollection,
-        private readonly ?DependencyFactory $dependencyFactory = null,
     ) {
         parent::__construct();
     }
@@ -48,21 +46,28 @@ final class DoctrineDiffCommandDecorator extends Command
                 'with-enums',
                 'E',
                 InputOption::VALUE_NONE,
-                'Run Enumeum diff command before the general one to create a migration with enums.',
+                'Run Enumeum schema validate command before the general one to validate enums schema.',
+            )
+            ->addOption(
+                'conn',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'The name of the connection for enumeum.',
+                'default',
             )
             ->addOption(
                 'ignore-unknown-enums',
                 'U',
                 InputOption::VALUE_NONE,
-                'Do not sync database enum types which do not defined in application.',
-            );
+                'Do not validate database enum types which do not defined in application.',
+            )
+        ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $registry = $this->definitionRegistryCollection->getRegistry(
-            $this->dependencyFactory->getConfiguration()->getConnectionName() ?? 'default',
-        );
+        $connectionName = $input->hasOption('conn') ? $input->getOption('conn') : 'default';
+        $registry = $this->definitionRegistryCollection->getRegistry($connectionName);
         TypeRegistryLoader::load($registry->getDefinitions());
 
         $enumeumResult = 0;
@@ -74,7 +79,7 @@ final class DoctrineDiffCommandDecorator extends Command
         }
 
         $doctrineResult = $this->doctrineCommand->run(
-            ArrayInputResolver::resolve($this->doctrineCommand->getDefinition(), $input),
+            ArrayInputResolver::resolve($this->enumeumCommand->getDefinition(), $input),
             $output,
         );
 
