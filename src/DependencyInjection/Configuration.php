@@ -25,11 +25,19 @@ class Configuration implements ConfigurationInterface
         $rootNode
             ->beforeNormalization()
                 ->ifTrue(static function ($v) {
-                    return is_array($v) && !array_key_exists('connections', $v) && !array_key_exists('connection', $v);
+                    return is_array($v)
+                        && !array_key_exists('connections', $v)
+                        && !array_key_exists('connection', $v)
+                    ;
                 })
                 ->then(static function ($v) {
+                    $excludedKeys = ['doctrine' => true];
                     $connection = [];
                     foreach ($v as $key => $value) {
+                        if (isset($excludedKeys[$key])) {
+                            continue;
+                        }
+
                         $connection[$key] = $value;
                         unset($v[$key]);
                     }
@@ -37,6 +45,16 @@ class Configuration implements ConfigurationInterface
 
                     return $v;
                 })
+            ->end()
+            ->children()
+                ->arrayNode('doctrine')
+                ->canBeDisabled()
+                ->children()
+                    ->booleanNode('commands_decoration')
+                    ->defaultValue(true)
+                    ->end()
+                ->end()
+                ->end()
             ->end()
             ->fixXmlConfig('connection')
             ->append($this->getConnectionsNode())

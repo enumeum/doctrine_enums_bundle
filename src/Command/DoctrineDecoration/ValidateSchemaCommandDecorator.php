@@ -9,11 +9,11 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Enumeum\DoctrineEnumBundle\Command;
+namespace Enumeum\DoctrineEnumBundle\Command\DoctrineDecoration;
 
 use Doctrine\ORM\Tools\Console\Command\ValidateSchemaCommand as DoctrineValidateSchemaCommand;
 use Enumeum\DoctrineEnum\Type\TypeRegistryLoader;
-use Enumeum\DoctrineEnumBundle\ArrayInputResolver;
+use Enumeum\DoctrineEnumBundle\Command\DoctrineDecoration\Tools\ArrayInputResolver;
 use Enumeum\DoctrineEnumBundle\Command\ValidateSchemaCommand as EnumeumValidateSchemaCommand;
 use Enumeum\DoctrineEnumBundle\DefinitionRegistryCollection;
 use Symfony\Component\Console\Command\Command;
@@ -21,7 +21,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-final class DoctrineValidateSchemaCommandDecorator extends Command
+final class ValidateSchemaCommandDecorator extends Command
 {
     /** @var string|null */
     protected static $defaultName = 'doctrine:schema:validate';

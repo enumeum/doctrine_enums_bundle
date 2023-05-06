@@ -9,7 +9,7 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Enumeum\DoctrineEnumBundle;
+namespace Enumeum\DoctrineEnumBundle\Command\DoctrineDecoration\Tools;
 
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputDefinition;
@@ -20,7 +20,7 @@ class ArrayInputResolver
 {
     /**
      * Symfony Proxy Command sets "em" as optional and assigns NULL to it,
-     * but original Doctrine Command awaits "em" with value and fails.
+     * but at the same time original Doctrine Command awaits "em" with value and fails.
      */
     private static iterable $filter = ['em'];
 

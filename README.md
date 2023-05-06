@@ -128,10 +128,33 @@ class Entity
 }
 ```
 
-### Usage
+### Commands
+In order to automate enums management bundle provides some commands.
+#### Diff
 Diff command will create migration file using Doctrine Migrations bundle config.
 
     ./bin/console enumeum:migrations:diff
 
-Note that Doctrine's **doctrine:migrations:diff** command is overwritten and decorated to support types loading.
-It has no any side effects, but you should be informed about that. 
+List of options is generally similar to Doctrine's **doctrine:migrations:diff** command, except one additional option.
+"-U" allows to ignore enums already existing in database, otherwise diff command will try to drop them.
+#### Schema validate
+Schema validate command will check whether database enums are in sync with their definitions in application.
+
+    ./bin/console enumeum:schema:validate
+
+This command has optional "--em" and "--conn" options for those cases when application has different from "default" configuration.  
+Option "-U" allows to ignore enums already existing in database.
+
+### Integration with Doctrine's commands
+Bundle also allows to use Enumeum commands with appropriate Doctrine's commands to perform better usability.
+
+    enumeum:migrations:diff -> doctrine:migrations:diff
+    enumeum:schema:validate -> doctrine:schema:validate
+
+This is provided by Doctrine's commands overriding using commands decoration. Every Doctrine's command has additional option "-E" which allows to run Enumeum command before the general. 
+Commands decoration is enabled by default and can be disabled by following configuration:
+```yaml
+doctrine_enum:
+  doctrine:
+    commands_decoration: false
+```

@@ -45,7 +45,7 @@ final class ValidateSchemaCommand extends AbstractEntityManagerCommand
         parent::configure();
 
         $this
-            ->setDescription('Validate the Enumeum enums by comparing your current database to your enums information.')
+            ->setDescription('Validate configured enums by comparing your current database to your enums information.')
             ->setHelp(<<<EOT
 The <info>%command.name%</info> command validates enums by comparing your current database to your enums information:
 

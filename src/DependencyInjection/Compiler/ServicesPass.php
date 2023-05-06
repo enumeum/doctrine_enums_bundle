@@ -20,8 +20,8 @@ use Enumeum\DoctrineEnum\EnumUsage\TableColumnRegistry;
 use Enumeum\DoctrineEnum\EventSubscriber\PostGenerateSchemaSubscriber;
 use Enumeum\DoctrineEnum\Schema\SchemaManager;
 use Enumeum\DoctrineEnumBundle\Command\DiffCommand;
-use Enumeum\DoctrineEnumBundle\Command\DoctrineDiffCommandDecorator;
-use Enumeum\DoctrineEnumBundle\Command\DoctrineValidateSchemaCommandDecorator;
+use Enumeum\DoctrineEnumBundle\Command\DoctrineDecoration\DiffCommandDecorator;
+use Enumeum\DoctrineEnumBundle\Command\DoctrineDecoration\ValidateSchemaCommandDecorator;
 use Enumeum\DoctrineEnumBundle\Command\ValidateSchemaCommand;
 use Enumeum\DoctrineEnumBundle\DefinitionRegistryCollection;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
@@ -51,7 +51,9 @@ class ServicesPass implements CompilerPassInterface
         $doctrineEntityManagerProvider = $container->getDefinition('doctrine.orm.command.entity_manager_provider');
 
         $this->compileCommands($container, $definitionRegistryCollection, $doctrineDependencyFactory, $doctrineEntityManagerProvider);
-        $this->compileCommandDecorators($container, $definitionRegistryCollection, $doctrineDependencyFactory);
+        if ($container->getParameter('doctrine_enum.config.commands_decoration')) {
+            $this->compileCommandDecorators($container, $definitionRegistryCollection, $doctrineDependencyFactory);
+        }
 
         foreach ($configs as $name => $config) {
             $connection = $container->findDefinition(sprintf('doctrine.dbal.%s_connection', $name));
@@ -146,7 +148,7 @@ class ServicesPass implements CompilerPassInterface
     ): void {
         $doctrineDiffCommandDecorator = $container->setDefinition(
             'enumeum.doctrine_diff_command_decorator',
-            new Definition(DoctrineDiffCommandDecorator::class, [
+            new Definition(DiffCommandDecorator::class, [
                     new Reference('enumeum.doctrine_diff_command_decorator.inner'),
                     new Reference('enumeum.migrations.diff_command'),
                     $definitionRegistryCollection,
@@ -159,7 +161,7 @@ class ServicesPass implements CompilerPassInterface
 
         $doctrineValidateSchemaCommandDecorator = $container->setDefinition(
             'enumeum.doctrine_validate_schema_command_decorator',
-            new Definition(DoctrineValidateSchemaCommandDecorator::class, [
+            new Definition(ValidateSchemaCommandDecorator::class, [
                     new Reference('enumeum.doctrine_validate_schema_command_decorator.inner'),
                     new Reference('enumeum.schema.validate_command'),
                     $definitionRegistryCollection,

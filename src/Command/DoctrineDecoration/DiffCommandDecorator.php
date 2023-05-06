@@ -9,20 +9,20 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Enumeum\DoctrineEnumBundle\Command;
+namespace Enumeum\DoctrineEnumBundle\Command\DoctrineDecoration;
 
 use Doctrine\Migrations\DependencyFactory;
 use Doctrine\Migrations\Tools\Console\Command\DiffCommand as DoctrineDiffCommand;
 use Enumeum\DoctrineEnum\Type\TypeRegistryLoader;
-use Enumeum\DoctrineEnumBundle\ArrayInputResolver;
 use Enumeum\DoctrineEnumBundle\Command\DiffCommand as EnumeumDiffCommand;
+use Enumeum\DoctrineEnumBundle\Command\DoctrineDecoration\Tools\ArrayInputResolver;
 use Enumeum\DoctrineEnumBundle\DefinitionRegistryCollection;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-final class DoctrineDiffCommandDecorator extends Command
+final class DiffCommandDecorator extends Command
 {
     /** @var string|null */
     protected static $defaultName = 'doctrine:migrations:diff';
