@@ -48,7 +48,7 @@ class DiffGenerator
             $upSql,
             $formatted,
             $lineLength,
-            $checkDbPlatform
+            $checkDbPlatform,
         );
 
         $downSql = $comparator->compareSchemas($toSchema, $fromSchema)->toSql(withoutCreating: $ignoreUnknownTypes);
@@ -56,18 +56,14 @@ class DiffGenerator
             $downSql,
             $formatted,
             $lineLength,
-            $checkDbPlatform
+            $checkDbPlatform,
         );
 
         if ('' === $up && '' === $down) {
             throw NoChangesDetected::new();
         }
 
-        return $this->migrationGenerator->generateMigration(
-            $fqcn,
-            $up,
-            $down
-        );
+        return $this->migrationGenerator->generateMigration($fqcn, $up, $down);
     }
 
     private function createEmptySchema(): Schema

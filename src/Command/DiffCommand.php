@@ -68,39 +68,39 @@ EOT
                 'namespace',
                 null,
                 InputOption::VALUE_REQUIRED,
-                'The namespace to use for the migration (must be in the list of configured namespaces)'
+                'The namespace to use for the migration (must be in the list of configured namespaces)',
             )
             ->addOption(
                 'formatted',
                 null,
                 InputOption::VALUE_NONE,
-                'Format the generated SQL.'
+                'Format the generated SQL.',
             )
             ->addOption(
                 'line-length',
                 null,
                 InputOption::VALUE_REQUIRED,
                 'Max line length of unformatted lines.',
-                '120'
+                '120',
             )
             ->addOption(
                 'check-database-platform',
                 null,
                 InputOption::VALUE_OPTIONAL,
                 'Check Database Platform to the generated code.',
-                false
+                false,
             )
             ->addOption(
                 'allow-empty-diff',
                 null,
                 InputOption::VALUE_NONE,
-                'Do not throw an exception when no changes are detected.'
+                'Do not throw an exception when no changes are detected.',
             )
             ->addOption(
                 'from-empty-schema',
                 null,
                 InputOption::VALUE_NONE,
-                'Generate a full migration as if the current database was empty.'
+                'Generate a full migration as if the current database was empty.',
             )
             ->addOption(
                 'ignore-unknown-enums',
@@ -180,12 +180,12 @@ EOT
             '',
             sprintf(
                 'To run just this migration for testing purposes, you can use <info>migrations:execute --up \'%s\'</info>',
-                addslashes($fqcn)
+                addslashes($fqcn),
             ),
             '',
             sprintf(
                 'To revert the migration you can use <info>migrations:execute --down \'%s\'</info>',
-                addslashes($fqcn)
+                addslashes($fqcn),
             ),
             '',
         ]);
@@ -211,7 +211,7 @@ EOT
         AvailableMigrationsList $newMigrations,
         ExecutedMigrationsList $executedUnavailableMigrations,
         InputInterface $input,
-        OutputInterface $output
+        OutputInterface $output,
     ): bool {
         if (0 === count($newMigrations) && 0 === count($executedUnavailableMigrations)) {
             return true;
@@ -220,14 +220,14 @@ EOT
         if (0 !== count($newMigrations)) {
             $this->io->warning(sprintf(
                 'You have %d available migrations to execute.',
-                count($newMigrations)
+                count($newMigrations),
             ));
         }
 
         if (0 !== count($executedUnavailableMigrations)) {
             $this->io->warning(sprintf(
                 'You have %d previously executed migrations in the database that are not registered migrations.',
-                count($executedUnavailableMigrations)
+                count($executedUnavailableMigrations),
             ));
         }
 

@@ -18,8 +18,8 @@ HEADER;
 
 $finder = PhpCsFixer\Finder::create()
     ->in([
-        __DIR__.'/src',
-        __DIR__.'/tests',
+        __DIR__ . '/src',
+        __DIR__ . '/tests',
     ])
     ->append([__FILE__])
     ->exclude([]);
@@ -29,6 +29,7 @@ return (new PhpCsFixer\Config())
         '@Symfony' => true,
         'combine_consecutive_issets' => true,
         'combine_consecutive_unsets' => true,
+        'concat_space' => ['spacing' => 'one'],
         'declare_strict_types' => true,
         'error_suppression' => true,
         'global_namespace_import' => ['import_classes' => true, 'import_functions' => true],
@@ -43,6 +44,16 @@ return (new PhpCsFixer\Config())
         'no_useless_else' => true,
         'ordered_class_elements' => true,
         'ordered_imports' => ['sort_algorithm' => 'alpha', 'imports_order' => ['class', 'function', 'const']],
+        'phpdoc_separation' => [
+            'groups' => [
+                ['ORM\\*'],
+                ['Assert\\*'],
+                ['deprecated', 'link', 'see', 'since'],
+                ['author', 'copyright', 'license'],
+                ['category', 'package', 'subpackage'],
+                ['property', 'property-read', 'property-write'],
+            ],
+        ],
         'php_unit_construct' => true,
         'php_unit_dedicate_assert' => ['target' => 'newest'],
         'php_unit_dedicate_assert_internal_type' => ['target' => 'newest'],
@@ -58,6 +69,7 @@ return (new PhpCsFixer\Config())
         'self_accessor' => true,
         'strict_param' => true,
         'ternary_to_null_coalescing' => true,
+        'trailing_comma_in_multiline' => ['after_heredoc' => true, 'elements' => ['arguments', 'arrays', 'match', 'parameters']],
     ])
     ->setFinder($finder)
     ->setRiskyAllowed(true)

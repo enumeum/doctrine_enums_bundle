@@ -26,7 +26,7 @@ class DoctrineEnumExtension extends Extension
 
         $container->setParameter(
             'doctrine_enum.config.commands_decoration',
-            $config['doctrine']['commands_decoration']
+            $config['doctrine']['commands_decoration'],
         );
         $container->setParameter('doctrine_enum.config.connections', $config['connections']);
     }

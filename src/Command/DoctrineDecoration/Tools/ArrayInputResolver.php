@@ -36,7 +36,7 @@ class ArrayInputResolver
                     continue;
                 }
 
-                $parameters['--'.$name] = $value;
+                $parameters['--' . $name] = $value;
             }
         }
         foreach ($input->getArguments() as $name => $value) {

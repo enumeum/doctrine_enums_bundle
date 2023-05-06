@@ -44,7 +44,7 @@ class ServicesPass implements CompilerPassInterface
 
         $definitionRegistryCollection = $container->setDefinition(
             'enumeum.definition_registry_collection',
-            new Definition(DefinitionRegistryCollection::class)
+            new Definition(DefinitionRegistryCollection::class),
         );
 
         $doctrineDependencyFactory = $container->getDefinition('doctrine.migrations.dependency_factory');
@@ -61,7 +61,7 @@ class ServicesPass implements CompilerPassInterface
 
             $definitionRegistryLoader = $container->setDefinition(
                 sprintf('enumeum.%s_definition_registry_loader', $name),
-                new Definition(DefinitionRegistryLoader::class)
+                new Definition(DefinitionRegistryLoader::class),
             )
                 ->setFactory([DefinitionRegistryLoader::class, 'create'])
                 ->setArguments([null, $config['types'], $config['paths']])
@@ -73,7 +73,7 @@ class ServicesPass implements CompilerPassInterface
 
             $definitionRegistry = $container->setDefinition(
                 sprintf('enumeum.%s_definition_registry', $name),
-                new Definition(DefinitionRegistry::class)
+                new Definition(DefinitionRegistry::class),
             )
                 ->setFactory([$definitionRegistryLoader, 'getRegistry'])
             ;
@@ -83,7 +83,7 @@ class ServicesPass implements CompilerPassInterface
 
             $tableColumnRegistry = $container->setDefinition(
                 sprintf('enumeum.%s_table_column_registry', $name),
-                new Definition(TableColumnRegistry::class, [$connection])
+                new Definition(TableColumnRegistry::class, [$connection]),
             );
             if ($isSingleConnection || self::DEFAULT_NAME === $name) {
                 $container->setAlias(TableColumnRegistry::class, sprintf('enumeum.%s_table_column_registry', $name));
@@ -91,13 +91,13 @@ class ServicesPass implements CompilerPassInterface
 
             $postGenerateSchemaSubscriber = $container->setDefinition(
                 sprintf('enumeum.%s_post_generate_schema_subscriber', $name),
-                new Definition(PostGenerateSchemaSubscriber::class, [$definitionRegistry, $tableColumnRegistry])
+                new Definition(PostGenerateSchemaSubscriber::class, [$definitionRegistry, $tableColumnRegistry]),
             );
             $eventManager->addMethodCall('addEventSubscriber', [$postGenerateSchemaSubscriber]);
 
             $schemaManager = $container->setDefinition(
                 sprintf('enumeum.%s_schema_manager', $name),
-                new Definition(SchemaManager::class)
+                new Definition(SchemaManager::class),
             )
                 ->setFactory([SchemaManager::class, 'create'])
                 ->setArguments([$definitionRegistry, $connection])
@@ -108,7 +108,7 @@ class ServicesPass implements CompilerPassInterface
 
             $container->setDefinition(
                 sprintf('enumeum.%s_enum_tool', $name),
-                new Definition(EnumTool::class, [$schemaManager, $connection])
+                new Definition(EnumTool::class, [$schemaManager, $connection]),
             );
             if ($isSingleConnection || self::DEFAULT_NAME === $name) {
                 $container->setAlias(EnumTool::class, sprintf('enumeum.%s_enum_tool', $name));
@@ -153,7 +153,7 @@ class ServicesPass implements CompilerPassInterface
                     new Reference('enumeum.migrations.diff_command'),
                     $definitionRegistryCollection,
                     $doctrineDependencyFactory,
-                ]
+                ],
             ),
         );
         $doctrineDiffCommandDecorator->setDecoratedService('doctrine_migrations.diff_command');
@@ -165,7 +165,7 @@ class ServicesPass implements CompilerPassInterface
                     new Reference('enumeum.doctrine_validate_schema_command_decorator.inner'),
                     new Reference('enumeum.schema.validate_command'),
                     $definitionRegistryCollection,
-                ]
+                ],
             ),
         );
         $doctrineValidateSchemaCommandDecorator->setDecoratedService('doctrine.schema_validate_command');
